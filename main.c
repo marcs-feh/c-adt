@@ -33,12 +33,27 @@ void vec_test(){
 	TEST_LOG("Resize and append");
 	Vec_resize(&v, 3);
 	Vec_append(&v, 0);
-	// Expect [0, 1.5, -3.2]
+	// Expect [0, 1.5, -3.2, 0]
 	TEST_EQ(0, v.data[0]);
 	TEST_EQ(1.5f, v.data[1]);
 	TEST_EQ(-3.2f, v.data[2]);
 	TEST_EQ(4, v.len);
 	TEST_EQ(7, v.cap);
+
+	TEST_LOG("Resize and pop");
+	Vec_pop(&v);
+	TEST_EQ(-3.2f, v.data[v.len - 1]);
+	TEST_EQ(3, v.len);
+	Vec_pop(&v);
+	Vec_pop(&v);
+	TEST_EQ(0, v.data[v.len - 1]);
+	TEST_EQ(1, v.len);
+	TEST_EQ(2, v.cap);
+	TEST_LOG("Appending 20 elements.");
+	for(size_t i = 0; i < 20; i++)
+		Vec_append(&v, 0);
+	TEST_EQ(21, v.len);
+	TEST_EQ(23, v.cap);
 
 	TEST_LOG("Vec_del");
 	Vec_del(&v);

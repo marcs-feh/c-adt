@@ -53,4 +53,14 @@ void Vec_append(Vec *v, float e){
 	v->len++;
 }
 
+void Vec_pop(Vec *v){
+	if(v == NULL) return;
+	if(v->len == 0) return;
+
+	if(v->len - 1 <= (v->cap / 2)){
+		Vec_resize(v, v->len);
+	}
+
+	v->len--;
+}
 
