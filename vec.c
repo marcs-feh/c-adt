@@ -53,6 +53,26 @@ void Vec_append(Vec *v, float e){
 	v->len++;
 }
 
+void Vec_insert(Vec *v, size_t idx, float e){
+	if(v == NULL) return;
+	if(idx > v->len) return;
+
+	// Inserting at pos len is same as appending.
+	if(idx == v->len){
+		Vec_append(v, e);
+	} else {
+		if(v->len + 1 >= v->cap){
+			Vec_resize(v, (v->len * 2) + 1);
+		}
+		for(size_t i = v->len; i >= idx; i--){
+			v->data[i + 1] = v->data[i];
+			if(i == 0) break;
+		}
+		v->data[idx] = e;
+		v->len++;
+	}
+}
+
 void Vec_pop(Vec *v){
 	if(v == NULL) return;
 	if(v->len == 0) return;
@@ -63,4 +83,12 @@ void Vec_pop(Vec *v){
 
 	v->len--;
 }
+
+float* vec_at(Vec *v, size_t idx){
+	if(v == NULL) return NULL;
+	if(idx >= v->len) return NULL;
+
+	return v->data + idx;
+}
+
 

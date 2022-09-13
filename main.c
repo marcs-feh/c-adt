@@ -54,6 +54,28 @@ void vec_test(){
 		Vec_append(&v, 0);
 	TEST_EQ(21, v.len);
 	TEST_EQ(23, v.cap);
+	TEST_LOG("Pop 50 times.");
+	for(size_t i = 0; i < 50; i++)
+		Vec_pop(&v);
+	TEST_EQ(0, v.len);
+	TEST_EQ(1, v.cap);
+
+	TEST_LOG("Inserting");
+	Vec_insert(&v, 0, 9);
+	Vec_insert(&v, 0, 6);
+	Vec_insert(&v, 0, 0);
+	// Expect [0, 6, 9]
+	TEST_EQ(0, v.data[0]);
+	TEST_EQ(6, v.data[1]);
+	TEST_EQ(9, v.data[2]);
+	// Expect [0, 4, 6, 2, 9]
+	Vec_insert(&v, 2, 2);
+	Vec_insert(&v, 1, 4);
+	TEST_EQ(0, v.data[0]);
+	TEST_EQ(4, v.data[1]);
+	TEST_EQ(6, v.data[2]);
+	TEST_EQ(2, v.data[3]);
+	TEST_EQ(9, v.data[4]);
 
 	TEST_LOG("Vec_del");
 	Vec_del(&v);
