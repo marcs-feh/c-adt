@@ -77,6 +77,20 @@ void vec_test(){
 	TEST_EQ(2, v.data[3]);
 	TEST_EQ(9, v.data[4]);
 
+	TEST_LOG("Removing");
+	Vec_remove(&v, 0);
+	Vec_remove(&v, 2);
+	// Expect [4, 6, 9]
+	TEST_EQ(4, v.data[0]);
+	TEST_EQ(6, v.data[1]);
+	TEST_EQ(9, v.data[2]);
+
+	TEST_LOG("Access");
+	TEST_EQ(false, (Vec_at(&v, 0) == NULL));
+	TEST_EQ(false, (Vec_at(&v, 1) == NULL));
+	TEST_EQ(false, (Vec_at(&v, 2) == NULL));
+	TEST_EQ(true, (Vec_at(&v, 6) == NULL));
+
 	TEST_LOG("Vec_del");
 	Vec_del(&v);
 	TEST_EQ(0, v.len);

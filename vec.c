@@ -45,6 +45,7 @@ void Vec_resize(Vec *v, size_t n){
 
 void Vec_append(Vec *v, float e){
 	if(v == NULL) return;
+	// Grow if needed.
 	if(v->len + 1 >= v->cap){
 		Vec_resize(v, (v->cap * 2) + 1);
 	}
@@ -61,6 +62,7 @@ void Vec_insert(Vec *v, size_t idx, float e){
 	if(idx == v->len){
 		Vec_append(v, e);
 	} else {
+		// Grow if needed.
 		if(v->len + 1 >= v->cap){
 			Vec_resize(v, (v->len * 2) + 1);
 		}
@@ -84,7 +86,27 @@ void Vec_pop(Vec *v){
 	v->len--;
 }
 
-float* vec_at(Vec *v, size_t idx){
+void Vec_remove(Vec *v, size_t idx){
+	if(v == NULL) return;
+	if(v->len == 0 || idx > v->len) return;
+
+	// Shrink if needed.
+	if(v->len - 1 <= (v->cap / 2)){
+		Vec_resize(v, v->len);
+	}
+
+	if(idx == v->len){ // Removing at pos len is same as popping.
+		Vec_pop(v);
+	} else {
+		for(uint i = idx; i < v->len - 1; i++){
+			v->data[i] = v->data[i+1];
+		}
+		v->len--;
+	}
+
+}
+
+float* Vec_at(Vec *v, size_t idx){
 	if(v == NULL) return NULL;
 	if(idx >= v->len) return NULL;
 
