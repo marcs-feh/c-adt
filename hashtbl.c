@@ -24,7 +24,7 @@ TableBucket Bucket_new(){
 	TableBucket b;
 	b.cap = HASH_TABLE_BUCKET_INIT_SIZE;
 	b.len = 0;
-	b.data = malloc(sizeof(*(b.data)) * b.cap);
+	b.data = malloc(sizeof(*b.data) * b.cap);
 
 	// Failed alloc.
 	if(b.data == NULL){
@@ -37,10 +37,10 @@ TableBucket Bucket_new(){
 
 void Bucket_del(TableBucket *b){
 	if(b == NULL) return;
-	b->cap = 0;
-	b->len = 0;
 	free(b->data);
 	b->data = NULL;
+	b->cap = 0;
+	b->len = 0;
 }
 
 HashTable Table_new(size_t buckets){
@@ -67,12 +67,12 @@ HashTable Table_new(size_t buckets){
 
 void Table_del(HashTable *ht){
 	if(ht == NULL) return;
-	ht->size = 0;
 	// Free bucket data.
 	for(size_t i = 0; i < ht->size; i++){
-		Bucket_del(&(ht->buckets[i]));
+		Bucket_del(ht->buckets + i);
 	}
-	// Free buckets.
+	// Free bucket array.
 	free(ht->buckets);
 	ht->buckets = NULL;
+	ht->size = 0;
 }

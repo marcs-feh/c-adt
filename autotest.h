@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 #define TEST_EQ(expect, fcall) { \
     if(expect == fcall) printf("[\033[0;32mok\033[0m]");\
