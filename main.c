@@ -30,13 +30,20 @@ void hashtbl_test(){
 		TEST_EQ(false, (ht.buckets[i].data == NULL));
 	}
 
+	TEST_LOG("adding values");
 	Table_add(&ht, (TableEntry){.key = "wow", .val = 7.5});
 	Table_add(&ht, (TableEntry){.key = "flower", .val = 4.2});
+	Table_add(&ht, (TableEntry){.key = "wow", .val = 7.5});
 	Table_add(&ht, (TableEntry){.key = "egg", .val = 6.9});
 	Table_add(&ht, (TableEntry){.key = "banana", .val = 5});
+	Table_add(&ht, (TableEntry){.key = "wow", .val = 7.5});
 	Table_add(&ht, (TableEntry){.key = "frogge", .val = -1});
 
 	TEST_LOG("print table");
+	printTable(&ht);
+	TEST_LOG("Removing 'flower' and 'frogge'");
+	Table_rm(&ht, "flower");
+	Table_rm(&ht, "frogge");
 	printTable(&ht);
 
 	TEST_LOG("table del");

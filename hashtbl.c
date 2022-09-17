@@ -53,18 +53,26 @@ void Bucket_resize(TableBucket *b, size_t n){
 		b->len = n;
 }
 
+bool Bucket_hasKey(TableBucket *b, const char* key){
+	if(b == NULL || key == NULL) return false;
+	for(size_t i = 0; i < b->len; i++)
+		if(strcmp(b->data[i].key, key) == 0)
+			return true;
+	return false;
+}
+
 void Bucket_add(TableBucket *b, TableEntry entry){
 	if(b == NULL) return;
-	printf("[bkt]\tTrying to add: \"{%p}%s\":%f at %p\n", entry.key, entry.key, entry.val, b);
-	// Grow if needed.
-	if(b->len + 1 >= b->cap){
-		Bucket_resize(b, (2 * b->len) + 1);
+
+	// Check conflict.
+	if(!Bucket_hasKey(b, entry.key)){
+		// Grow if needed.
+		if(b->len + 1 >= b->cap){
+			Bucket_resize(b, (2 * b->len) + 1);
+		}
+		b->data[b->len] = entry;
+		b->len++;
 	}
-
-	b->data[b->len] = entry;
-	printf("[bkt]\tAdded: \"{%p}%s\":%f at %p\n", b->data[b->len].key, b->data[b->len].key, b->data[b->len].val, b);
-
-	b->len++;
 }
 
 size_t Bucket_find(TableBucket *b, const char* key){
@@ -145,11 +153,14 @@ void Table_add(HashTable *ht, TableEntry entry){
 	if(entry.key == NULL) return;
 
 	size_t pos = Table_hfunc(entry.key, ht->size);
-	printf("[tbl]\tFirst bucket:%p\n", ht->buckets);
-	printf("[tbl]\tOffset bucket:%p\n", ht->buckets + pos);
-	printf("[tbl]\tTrying to add: \"{%p}%s\":%f at %p\n", entry.key, entry.key, entry.val, ht->buckets + pos);
 
 	Bucket_add(ht->buckets + pos, entry);
+}
+
+void Table_rm(HashTable *ht, const char *key){
+	if(ht == NULL || key == NULL) return;
+	TableBucket *b = ht->buckets + Table_hfunc(key, ht->size);
+	Bucket_rm(b, key);
 }
 
 void Table_del(HashTable *ht){
