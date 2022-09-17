@@ -1,3 +1,6 @@
+#ifndef INCLUDE_AUTOTEST_H_
+#define INCLUDE_AUTOTEST_H_
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -18,3 +21,4 @@
 	printf("[\033[0;34mlog\033[0m]\t%s\n", #msg);\
 }
 
+#endif

@@ -1,8 +1,11 @@
+#include "autotest.h"
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define HASH_TABLE_MIN_BUCKETS 8
 #define HASH_TABLE_BUCKET_INIT_SIZE 16;
+#define HASH_TABLE_NPOS ((size_t)(-1))
 
 typedef struct {
 	const char* key;
@@ -24,7 +27,8 @@ TableBucket Bucket_new(){
 	TableBucket b;
 	b.cap = HASH_TABLE_BUCKET_INIT_SIZE;
 	b.len = 0;
-	b.data = malloc(sizeof(*b.data) * b.cap);
+	//b.data = malloc(sizeof(*b.data) * b.cap);
+	b.data = calloc(b.cap, sizeof(*b.data));
 
 	// Failed alloc.
 	if(b.data == NULL){
@@ -32,7 +36,69 @@ TableBucket Bucket_new(){
 		return b;
 	}
 
+
 	return b;
+}
+
+void Bucket_resize(TableBucket *b, size_t n){
+	if(b == NULL) return;
+	TableEntry *newdata = realloc(b->data, n * sizeof(*newdata));
+
+	// Failed alloc.
+	if(newdata == NULL) return;
+
+	b->data = newdata;
+	b->cap = n;
+	if(b->len > n)
+		b->len = n;
+}
+
+void Bucket_add(TableBucket *b, TableEntry entry){
+	if(b == NULL) return;
+	printf("[bkt]\tTrying to add: \"{%p}%s\":%f at %p\n", entry.key, entry.key, entry.val, b);
+	// Grow if needed.
+	if(b->len + 1 >= b->cap){
+		Bucket_resize(b, (2 * b->len) + 1);
+	}
+
+	b->data[b->len] = entry;
+	printf("[bkt]\tAdded: \"{%p}%s\":%f at %p\n", b->data[b->len].key, b->data[b->len].key, b->data[b->len].val, b);
+
+	b->len++;
+}
+
+size_t Bucket_find(TableBucket *b, const char* key){
+	if(b == NULL) return HASH_TABLE_NPOS;
+	if(b->len == 0 || key == NULL) return HASH_TABLE_NPOS;
+
+	for(size_t i = 0; i < b->len; i++){
+		if(strcmp(key, b->data[i].key) == 0){
+			return i;
+		}
+	}
+	return HASH_TABLE_NPOS;
+}
+
+void Bucket_rm(TableBucket *b, const char* key){
+	if(b == NULL) return;
+	if(b->len == 0 || key == NULL) return;
+	size_t idx = Bucket_find(b, key);
+
+	// Shrink if needed.
+	if(b->len - 1 <= (b->cap / 2)){
+		Bucket_resize(b, b->len);
+	}
+
+	if(idx != HASH_TABLE_NPOS){
+		if(idx == b->len){ // Removing at pos len is same as popping.
+			b->len--;
+		} else {
+			for(uint i = idx; i < b->len - 1; i++){
+				b->data[i] = b->data[i+1];
+			}
+			b->len--;
+		}
+	}
 }
 
 void Bucket_del(TableBucket *b){
@@ -63,6 +129,27 @@ HashTable Table_new(size_t buckets){
 	}
 
 	return ht;
+}
+
+size_t Table_hfunc(const char* key, size_t tbl_size){
+	const size_t keylen = strlen(key);
+	size_t h = 1;
+	for(size_t i = 0; i < keylen; i++)
+		h = ((h * 31) + (size_t)(key[i]));
+
+	return (h % tbl_size);
+}
+
+void Table_add(HashTable *ht, TableEntry entry){
+	if(ht == NULL) return;
+	if(entry.key == NULL) return;
+
+	size_t pos = Table_hfunc(entry.key, ht->size);
+	printf("[tbl]\tFirst bucket:%p\n", ht->buckets);
+	printf("[tbl]\tOffset bucket:%p\n", ht->buckets + pos);
+	printf("[tbl]\tTrying to add: \"{%p}%s\":%f at %p\n", entry.key, entry.key, entry.val, ht->buckets + pos);
+
+	Bucket_add(ht->buckets + pos, entry);
 }
 
 void Table_del(HashTable *ht){
