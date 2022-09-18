@@ -46,6 +46,10 @@ void hashtbl_test(){
 	Table_rm(&ht, "frogge");
 	printTable(&ht);
 
+	TEST_LOG("get values");
+	TEST_EQ(7.5f, *Table_get(&ht, "wow"));
+	TEST_EQ(NULL, Table_get(&ht, "frogge"));
+
 	TEST_LOG("table del");
 	Table_del(&ht);
 	TEST_EQ(0, ht.size);

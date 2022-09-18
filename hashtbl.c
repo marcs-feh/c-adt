@@ -157,6 +157,18 @@ void Table_add(HashTable *ht, TableEntry entry){
 	Bucket_add(ht->buckets + pos, entry);
 }
 
+float* Table_get(HashTable *ht, const char *key){
+	if(ht == NULL || key == NULL) return NULL;
+
+	size_t tpos = Table_hfunc(key, ht->size);
+  size_t bpos = Bucket_find(ht->buckets + tpos, key);
+
+	if(bpos == HASH_TABLE_NPOS)
+		return NULL;
+	else
+		return &(ht->buckets[tpos].data[bpos].val);
+}
+
 void Table_rm(HashTable *ht, const char *key){
 	if(ht == NULL || key == NULL) return;
 	TableBucket *b = ht->buckets + Table_hfunc(key, ht->size);
