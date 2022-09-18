@@ -186,3 +186,4 @@ void Table_del(HashTable *ht){
 	ht->buckets = NULL;
 	ht->size = 0;
 }
+
