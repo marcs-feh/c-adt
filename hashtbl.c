@@ -1,3 +1,14 @@
+// Hash Table
+// A hash table uses a hashing function to associate a certain key to a index
+// in its internal storage. This implementation uses closed addressing, each
+// bucket is a Dynamic Array that can grow as needed. The number of buckets is
+// decided upon initializing the table.
+// 4 buckets example
+// | -> [{key:val} {key:val} | <free space>]
+// | -> [{key:val} | <free space>]
+// | -> [ | <free storage]
+// | -> [{key:val} | <free space>]
+
 #include "autotest.h"
 #include <stddef.h>
 #include <stdlib.h>

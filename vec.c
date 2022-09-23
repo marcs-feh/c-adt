@@ -1,3 +1,10 @@
+// Dynamic Array (aka Vector)
+// A dynamic array works just like any other list structure, it uses a plain
+// array as its storage, whenever more space is needed the storage is simply
+// reallocated to be bigger, if the lenght of the array is too small in
+// relation to its storage capacity, it is shrunk to avoid memory hogging.
+// [ x x x x x x | <free storage> ]
+
 #include <stddef.h>
 #include <stdlib.h>
 
