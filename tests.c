@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+// Testing macros
 #include "autotest.h"
 // Dynamic array (vector)
 #include "vec.c"
