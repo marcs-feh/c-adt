@@ -23,7 +23,6 @@ struct Queue {
 	float *data;
 };
 
-
 Queue Queue_new(){
 	Queue q;
 	q.cap = QUEUE_INIT_CAP;
@@ -46,7 +45,6 @@ void Queue_resize(Queue *q, size_t n){
 		// Failed alloc
 		return;
 	}
-
 
 	size_t i;
 	for(i = 0; i < n && (i + q->head) < q->tail ; i++){
@@ -79,8 +77,9 @@ void Queue_deq(Queue *q){
 	if(q->head == q->tail) return;
 
 	// More than half of queue is empty, shrink it.
-	if(q->head >= (q->cap / 2)){
+	if(q->head > (q->cap / 2)){
 		// Resize
+		Queue_resize(q, (q->cap / 2) + 1);
 	}
 
 	q->head++;

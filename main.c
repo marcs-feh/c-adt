@@ -2,7 +2,7 @@
 #include "tests.c"
 
 void printQueue(Queue q){
-	printf("H(%zu)| ", q.head);
+	printf("C:%zu \tH(%zu)| ", q.cap, q.head);
 	for(size_t i = q.head; i < q.tail; i++){
 		printf("%.1f ", q.data[i]);
 	}
@@ -35,12 +35,21 @@ void queue_test(){
 	printQueue(q);
 
 	TEST_LOG("queue grow");
-	for(size_t i = 0; i < 18; i++)
+	for(size_t i = 0; i < 24; i++)
 		Queue_enq(&q, i);
 	TEST_EQ(33, q.cap);
 	TEST_EQ(0, q.head);
-	TEST_EQ(18, q.tail);
+	TEST_EQ(24, q.tail);
 	printQueue(q);
+
+	TEST_LOG("queue shrink");
+	for(size_t i = 0; i < 18; i++)
+		Queue_deq(&q);
+	TEST_EQ(17, q.cap);
+	TEST_EQ(1, q.head);
+	TEST_EQ(7, q.tail);
+	printQueue(q);
+
 
 	TEST_LOG("queue del");
 	Queue_del(&q);

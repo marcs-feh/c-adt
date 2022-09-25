@@ -172,7 +172,7 @@ float* Table_get(HashTable *ht, const char *key){
 	if(ht == NULL || key == NULL) return NULL;
 
 	size_t tpos = Table_hfunc(key, ht->size);
-  size_t bpos = Bucket_find(ht->buckets + tpos, key);
+	size_t bpos = Bucket_find(ht->buckets + tpos, key);
 
 	if(bpos == HASH_TABLE_NPOS)
 		return NULL;
