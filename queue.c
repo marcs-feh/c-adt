@@ -47,14 +47,15 @@ void Queue_resize(Queue *q, size_t n){
 		return;
 	}
 
-	size_t t;
-	for(size_t i = q->head, t = 0; i < q->tail && t < n; i++, t++){
-		newdat[t] = q->data[i];
+
+	size_t i;
+	for(i = 0; i < n && (i + q->head) < q->tail ; i++){
+		newdat[i] = q->data[i + q->head];
 	}
 
 	q->cap = n;
 	q->head = 0;
-	q->tail = t;
+	q->tail = i;
 	free(q->data);
 	q->data = newdat;
 
@@ -63,19 +64,26 @@ void Queue_resize(Queue *q, size_t n){
 void Queue_enq(Queue *q, float e){
 	if(q == NULL) return;
 
+	// Need more space.
 	if(q->tail + 1 >= q->cap){
 		// Resize
+		Queue_resize(q, (q->cap * 2) + 1);
 	}
 
-	q->tail++;
 	q->data[q->tail] = e;
+	q->tail++;
 }
 
-void Queue_deq(Queue *q, float e){
+void Queue_deq(Queue *q){
 	if(q == NULL) return;
 	if(q->head == q->tail) return;
 
-	q->head--;
+	// More than half of queue is empty, shrink it.
+	if(q->head >= (q->cap / 2)){
+		// Resize
+	}
+
+	q->head++;
 }
 
 float *Queue_head(Queue *q){

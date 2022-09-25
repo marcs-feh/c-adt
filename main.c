@@ -1,6 +1,14 @@
 #include "autotest.h"
 #include "tests.c"
 
+void printQueue(Queue q){
+	printf("H(%zu)| ", q.head);
+	for(size_t i = q.head; i < q.tail; i++){
+		printf("%.1f ", q.data[i]);
+	}
+	printf("|T(%zu)\n", q.tail);
+}
+
 void queue_test(){
 	Queue q = Queue_new();
 	TEST_LOG("queue new");
@@ -8,6 +16,31 @@ void queue_test(){
 	TEST_EQ(0, q.tail);
 	TEST_EQ(QUEUE_INIT_CAP, q.cap);
 	TEST_EQ(true, q.data != NULL);
+
+	TEST_LOG("enqueue");
+	printQueue(q);
+	Queue_enq(&q, 0.5f);
+	printQueue(q);
+	Queue_enq(&q, -1.2f);
+	printQueue(q);
+	Queue_enq(&q, 6.9f);
+	printQueue(q);
+
+	TEST_LOG("dequeue");
+	Queue_deq(&q);
+	printQueue(q);
+	Queue_deq(&q);
+	printQueue(q);
+	Queue_deq(&q);
+	printQueue(q);
+
+	TEST_LOG("queue grow");
+	for(size_t i = 0; i < 18; i++)
+		Queue_enq(&q, i);
+	TEST_EQ(33, q.cap);
+	TEST_EQ(0, q.head);
+	TEST_EQ(18, q.tail);
+	printQueue(q);
 
 	TEST_LOG("queue del");
 	Queue_del(&q);
