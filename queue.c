@@ -1,13 +1,14 @@
 // Queue
 // A queue is a FIFO structure, this implementation uses an underlying dynamic
 // array as its storage.
-// [ - - - - T x x x x x H - ]
+// [ - - - - H x x x x x T - ]
 // Whenever the queue needs more space the array is grown, to avoid too much
 // memory consumption once the number of elements in the queue use less than
-// 40% of its capacity, the underlying array is shrunk.
+// half of its capacity, the underlying array is shrunk.
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #define QUEUE_INIT_CAP 16
 #define MAX(a, b) (((a >= b) * a) + ((b > a) * b))
@@ -25,16 +26,57 @@ struct Queue {
 
 Queue Queue_new(){
 	Queue q;
-	q.cap = 0;
+	q.cap = QUEUE_INIT_CAP;
 	q.head = 0;
 	q.tail = 0;
-	q.data = NULL;
+	q.data = malloc(sizeof(float) * q.cap);
+
+	if(q.data == NULL){
+		// Failed alloc
+		q.cap = 0;
+	}
+
 	return q;
 }
 
-void Queue_enq(){}
+void Queue_resize(Queue *q, size_t n){
+	if(q == NULL || n == 0) return;
+	float *newdat = malloc(sizeof(float) * n);
+	if(newdat == NULL){
+		// Failed alloc
+		return;
+	}
 
-void Queue_deq(){}
+	size_t t;
+	for(size_t i = q->head, t = 0; i < q->tail && t < n; i++, t++){
+		newdat[t] = q->data[i];
+	}
+
+	q->cap = n;
+	q->head = 0;
+	q->tail = t;
+	free(q->data);
+	q->data = newdat;
+
+}
+
+void Queue_enq(Queue *q, float e){
+	if(q == NULL) return;
+
+	if(q->tail + 1 >= q->cap){
+		// Resize
+	}
+
+	q->tail++;
+	q->data[q->tail] = e;
+}
+
+void Queue_deq(Queue *q, float e){
+	if(q == NULL) return;
+	if(q->head == q->tail) return;
+
+	q->head--;
+}
 
 float *Queue_head(Queue *q){
 	if(q == NULL) return NULL;
@@ -42,8 +84,16 @@ float *Queue_head(Queue *q){
 }
 
 float *Queue_tail(Queue *q){
+	if(q == NULL) return NULL;
 	return NULL;
 }
 
 void Queue_del(Queue *q){
+	if(q == NULL) return;
+
+	q->cap = 0;
+	q->head = 0;
+	q->tail = 0;
+	free(q->data);
+	q->data = NULL;
 }

@@ -9,6 +9,8 @@
 #include "vec.c"
 // Hash table
 #include "hashtbl.c"
+// Queue
+#include "queue.c"
 
 void vec_test(){
 	Vec v = Vec_new();
