@@ -2,11 +2,17 @@
 #include "tests.c"
 
 void printQueue(Queue q){
-	printf("C:%zu \tH(%zu)| ", q.cap, q.head);
+	printf("C:%zu, H:%zu, T:%zu\t| ", q.cap, q.head, q.tail);
+	for(size_t i = 0; i < q.head; i++){
+		printf("- ");
+	}
 	for(size_t i = q.head; i < q.tail; i++){
 		printf("%.1f ", q.data[i]);
 	}
-	printf("|T(%zu)\n", q.tail);
+	for(size_t i = q.tail; i < q.cap; i++){
+		printf("- ");
+	}
+	printf("|\n");
 }
 
 void queue_test(){
@@ -50,6 +56,27 @@ void queue_test(){
 	TEST_EQ(7, q.tail);
 	printQueue(q);
 
+	TEST_LOG("emptying queue...");
+	for(size_t i = 0; i < 32; i++){
+		Queue_deq(&q);
+	}
+
+	TEST_LOG("queue cycle");
+	Queue_enq(&q, 6.9f);
+	Queue_enq(&q, 4.2f);
+	for(size_t i = 0; i < 32; i++){
+		float h = q.data[q.head];
+		Queue_deq(&q);
+		Queue_enq(&q, h);
+		printQueue(q);
+	}
+
+	TEST_LOG("queue fit");
+	Queue_fit(&q);
+	TEST_EQ(0, q.head);
+	TEST_EQ(2, q.tail);
+	TEST_EQ(2, q.cap);
+	printQueue(q);
 
 	TEST_LOG("queue del");
 	Queue_del(&q);

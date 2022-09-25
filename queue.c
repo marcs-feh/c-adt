@@ -85,6 +85,11 @@ void Queue_deq(Queue *q){
 	q->head++;
 }
 
+void Queue_fit(Queue *q){
+	if(q == NULL) return;
+	Queue_resize(q, q->tail - q->head);
+}
+
 float *Queue_head(Queue *q){
 	if(q == NULL) return NULL;
 	return NULL;
