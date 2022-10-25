@@ -112,7 +112,7 @@ void Bucket_rm(TableBucket *b, const char* key){
 		if(idx == b->len){ // Removing at pos len is same as popping.
 			b->len--;
 		} else {
-			for(uint i = idx; i < b->len - 1; i++){
+			for(size_t i = idx; i < b->len - 1; i++){
 				b->data[i] = b->data[i+1];
 			}
 			b->len--;

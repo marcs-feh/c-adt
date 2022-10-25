@@ -105,7 +105,7 @@ void Vec_remove(Vec *v, size_t idx){
 	if(idx == v->len){ // Removing at pos len is same as popping.
 		Vec_pop(v);
 	} else {
-		for(uint i = idx; i < v->len - 1; i++){
+		for(size_t i = idx; i < v->len - 1; i++){
 			v->data[i] = v->data[i+1];
 		}
 		v->len--;

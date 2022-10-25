@@ -56,7 +56,6 @@ void Queue_resize(Queue *q, size_t n){
 	q->tail = i;
 	free(q->data);
 	q->data = newdat;
-
 }
 
 void Queue_enq(Queue *q, float e){
