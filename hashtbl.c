@@ -47,7 +47,6 @@ TableBucket Bucket_new(){
 		return b;
 	}
 
-
 	return b;
 }
 
