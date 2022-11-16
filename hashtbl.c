@@ -25,11 +25,11 @@ typedef struct {
 typedef struct {
 	usize cap;
 	usize len;
-	TableEntry *data;
+	TableEntry* data;
 } TableBucket;
 
 typedef struct {
-	TableBucket *buckets;
+	TableBucket* buckets;
 	usize size;
 } HashTable;
 
@@ -37,7 +37,6 @@ TableBucket Bucket_new(){
 	TableBucket b;
 	b.cap = HASH_TABLE_BUCKET_INIT_SIZE;
 	b.len = 0;
-	//b.data = malloc(sizeof(*b.data) * b.cap);
 	b.data = calloc(b.cap, sizeof(*b.data));
 
 	// Failed alloc.
@@ -49,9 +48,9 @@ TableBucket Bucket_new(){
 	return b;
 }
 
-void Bucket_resize(TableBucket *b, usize n){
+void Bucket_resize(TableBucket* b, usize n){
 	if(b == NULL) return;
-	TableEntry *newdata = realloc(b->data, n * sizeof(*newdata));
+	TableEntry* newdata = realloc(b->data, n * sizeof(*newdata));
 
 	// Failed alloc.
 	if(newdata == NULL) return;
@@ -62,7 +61,7 @@ void Bucket_resize(TableBucket *b, usize n){
 		b->len = n;
 }
 
-bool Bucket_hasKey(TableBucket *b, const char* key){
+bool Bucket_hasKey(TableBucket* b, const char* key){
 	if(b == NULL || key == NULL) return false;
 	for(usize i = 0; i < b->len; i++)
 		if(strcmp(b->data[i].key, key) == 0)
@@ -70,7 +69,7 @@ bool Bucket_hasKey(TableBucket *b, const char* key){
 	return false;
 }
 
-void Bucket_add(TableBucket *b, TableEntry entry){
+void Bucket_add(TableBucket* b, TableEntry entry){
 	if(b == NULL) return;
 
 	// Check conflict.
@@ -84,7 +83,7 @@ void Bucket_add(TableBucket *b, TableEntry entry){
 	}
 }
 
-usize Bucket_find(TableBucket *b, const char* key){
+usize Bucket_find(TableBucket* b, const char* key){
 	if(b == NULL) return HASH_TABLE_NPOS;
 	if(b->len == 0 || key == NULL) return HASH_TABLE_NPOS;
 
@@ -96,7 +95,7 @@ usize Bucket_find(TableBucket *b, const char* key){
 	return HASH_TABLE_NPOS;
 }
 
-void Bucket_rm(TableBucket *b, const char* key){
+void Bucket_rm(TableBucket* b, const char* key){
 	if(b == NULL) return;
 	if(b->len == 0 || key == NULL) return;
 	usize idx = Bucket_find(b, key);
@@ -118,7 +117,7 @@ void Bucket_rm(TableBucket *b, const char* key){
 	}
 }
 
-void Bucket_del(TableBucket *b){
+void Bucket_del(TableBucket* b){
 	if(b == NULL) return;
 	free(b->data);
 	b->data = NULL;
@@ -157,7 +156,7 @@ usize Table_hfunc(const char* key, usize tbl_size){
 	return (h % tbl_size);
 }
 
-void Table_add(HashTable *ht, TableEntry entry){
+void Table_add(HashTable* ht, TableEntry entry){
 	if(ht == NULL) return;
 	if(entry.key == NULL) return;
 
@@ -166,7 +165,7 @@ void Table_add(HashTable *ht, TableEntry entry){
 	Bucket_add(ht->buckets + pos, entry);
 }
 
-f32* Table_get(HashTable *ht, const char *key){
+f32* Table_get(HashTable* ht, const char* key){
 	if(ht == NULL || key == NULL) return NULL;
 
 	usize tpos = Table_hfunc(key, ht->size);
@@ -178,13 +177,13 @@ f32* Table_get(HashTable *ht, const char *key){
 		return &(ht->buckets[tpos].data[bpos].val);
 }
 
-void Table_rm(HashTable *ht, const char *key){
+void Table_rm(HashTable* ht, const char* key){
 	if(ht == NULL || key == NULL) return;
-	TableBucket *b = ht->buckets + Table_hfunc(key, ht->size);
+	TableBucket* b = ht->buckets + Table_hfunc(key, ht->size);
 	Bucket_rm(b, key);
 }
 
-void Table_del(HashTable *ht){
+void Table_del(HashTable* ht){
 	if(ht == NULL) return;
 	// Free bucket data.
 	for(usize i = 0; i < ht->size; i++){

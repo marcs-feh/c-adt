@@ -14,7 +14,7 @@
 typedef struct {
 	usize cap;
 	usize len;
-	f32 *data;
+	f32*  data;
 } Vec;
 
 Vec Vec_new(){
@@ -29,7 +29,7 @@ Vec Vec_new(){
 	return v;
 }
 
-void Vec_del(Vec *v){
+void Vec_del(Vec* v){
 	if(v == NULL) return;
 	v->len = 0;
 	v->cap = 0;
@@ -37,9 +37,9 @@ void Vec_del(Vec *v){
 	v->data = NULL;
 }
 
-void Vec_resize(Vec *v, usize n){
+void Vec_resize(Vec* v, usize n){
 	if(v == NULL) return;
-	f32 *newdata = realloc(v->data, n * sizeof(*newdata));
+	f32* newdata = realloc(v->data, n * sizeof(*newdata));
 
 	// Failed alloc.
 	if(newdata == NULL) return;
@@ -50,18 +50,18 @@ void Vec_resize(Vec *v, usize n){
 		v->len = n;
 }
 
-void Vec_append(Vec *v, f32 e){
+void Vec_append(Vec* v, f32 e){
 	if(v == NULL) return;
 	// Grow if needed.
 	if(v->len + 1 >= v->cap){
-		Vec_resize(v, (v->cap * 2) + 1);
+		Vec_resize(v, (v->cap *  2) + 1);
 	}
 
 	v->data[v->len] = e;
 	v->len++;
 }
 
-void Vec_insert(Vec *v, usize idx, f32 e){
+void Vec_insert(Vec* v, usize idx, f32 e){
 	if(v == NULL) return;
 	if(idx > v->len) return;
 
@@ -71,7 +71,7 @@ void Vec_insert(Vec *v, usize idx, f32 e){
 	} else {
 		// Grow if needed.
 		if(v->len + 1 >= v->cap){
-			Vec_resize(v, (v->len * 2) + 1);
+			Vec_resize(v, (v->len *  2) + 1);
 		}
 		for(usize i = v->len; i >= idx; i--){
 			v->data[i + 1] = v->data[i];
@@ -82,7 +82,7 @@ void Vec_insert(Vec *v, usize idx, f32 e){
 	}
 }
 
-void Vec_pop(Vec *v){
+void Vec_pop(Vec* v){
 	if(v == NULL) return;
 	if(v->len == 0) return;
 
@@ -93,7 +93,7 @@ void Vec_pop(Vec *v){
 	v->len--;
 }
 
-void Vec_remove(Vec *v, usize idx){
+void Vec_remove(Vec* v, usize idx){
 	if(v == NULL) return;
 	if(v->len == 0 || idx > v->len) return;
 
@@ -113,7 +113,7 @@ void Vec_remove(Vec *v, usize idx){
 
 }
 
-f32* Vec_at(Vec *v, usize idx){
+f32* Vec_at(Vec* v, usize idx){
 	if(v == NULL) return NULL;
 	if(idx >= v->len) return NULL;
 

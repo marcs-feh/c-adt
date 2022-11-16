@@ -19,7 +19,7 @@ struct Queue {
 	usize cap;
 	usize head;
 	usize tail;
-	f32 *data;
+	f32* data;
 };
 
 Queue Queue_new(){
@@ -37,9 +37,9 @@ Queue Queue_new(){
 	return q;
 }
 
-void Queue_resize(Queue *q, usize n){
+void Queue_resize(Queue* q, usize n){
 	if(q == NULL || n == 0) return;
-	f32 *newdat = malloc(sizeof(f32) * n);
+	f32* newdat = malloc(sizeof(f32) * n);
 	if(newdat == NULL){
 		// Failed alloc
 		return;
@@ -57,7 +57,7 @@ void Queue_resize(Queue *q, usize n){
 	q->data = newdat;
 }
 
-void Queue_enq(Queue *q, f32 e){
+void Queue_enq(Queue* q, f32 e){
 	if(q == NULL) return;
 
 	// Need more space.
@@ -70,7 +70,7 @@ void Queue_enq(Queue *q, f32 e){
 	q->tail++;
 }
 
-void Queue_deq(Queue *q){
+void Queue_deq(Queue* q){
 	if(q == NULL) return;
 	if(q->head == q->tail) return;
 
@@ -83,22 +83,22 @@ void Queue_deq(Queue *q){
 	q->head++;
 }
 
-void Queue_fit(Queue *q){
+void Queue_fit(Queue* q){
 	if(q == NULL) return;
 	Queue_resize(q, q->tail - q->head);
 }
 
-f32 *Queue_head(Queue *q){
+f32* Queue_head(Queue* q){
 	if(q == NULL) return NULL;
 	return NULL;
 }
 
-f32 *Queue_tail(Queue *q){
+f32* Queue_tail(Queue* q){
 	if(q == NULL) return NULL;
 	return NULL;
 }
 
-void Queue_del(Queue *q){
+void Queue_del(Queue* q){
 	if(q == NULL) return;
 
 	q->cap = 0;
