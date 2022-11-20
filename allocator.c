@@ -51,8 +51,11 @@ void* LAlloc_alloc(LinearAlloc* allocator, usize nbytes){
 	return (void*)p;
 }
 
+void* LAlloc_free(LinearAlloc* allocator){
+	allocator->offset = 0;
+}
+
 void LAlloc_del(LinearAlloc* allocator){
-	if(allocator == NULL) return;
 	free(allocator->base);
 	free(allocator);
 }
